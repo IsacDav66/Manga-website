@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter Images</title>
+    <style>
+        body {
+            position: relative;
+            margin: 0;
+            padding-top: 50px;
+            /* Ajusta el padding para que el contenido no quede debajo del botón flotante */
+        }
+
+        #floating-button {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            /* Asegura que el botón esté sobre otros elementos */
+        }
+            img {
+            max-height: calc(100vh - 100px);
+            /* Ajusta la altura de la imagen según la altura de la ventana */
+            width: auto;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <img id="chapter-image" src="{{ current_image }}" alt="Chapter Image">
+    </div>
+
+    <!-- Botón flotante para navegar a un capítulo específico -->
+    <div id="floating-button">
+        <input type="number" id="chapter-number" placeholder="Enter chapter number" readonly>
+        <button onclick="goToChapter()">Go</button>
+    </div>
+
+    <script>
+        // Lista de URLs de imágenes por capítulo
+        const chapterImageUrls = {{ chapter_image_urls | tojson }};
+        // Índice del capítulo actual
+        let currentChapterIndex = 0;
+
+        // Función para cambiar al capítulo anterior
+        function goToPreviousChapter() {
+            if (currentChapterIndex > 0) {
+                currentChapterIndex--;
+                updateChapterImage();
+            }
+        }
+
+        // Función para cambiar al siguiente capítulo
+        function goToNextChapter() {
+            if (currentChapterIndex < chapterImageUrls.length - 1) {
+                currentChapterIndex++;
+                updateChapterImage();
+            }
+        }
+
+        // Función para ir a un capítulo específico
+        function goToChapter() {
+            const chapterNumberInput = document.getElementById('chapter-number');
+            const chapterNumber = parseInt(chapterNumberInput.value);
+            if (!isNaN(chapterNumber) && chapterNumber > 0 && chapterNumber <= chapterImageUrls.length) {
+                currentChapterIndex = chapterNumber - 1; // Ajusta el índice para que sea 0-based
+                updateChapterImage();
+            } else {
+                alert('Please enter a valid chapter number.');
+            }
+        }
+
+        // Función para actualizar la imagen del capítulo actual
+        function updateChapterImage() {
+            const chapterImage = document.getElementById('chapter-image');
+            chapterImage.src = chapterImageUrls[currentChapterIndex];
+        }
+
+        // Función para habilitar la edición del campo de número de capítulo
+        function enableChapterInput() {
+            const chapterNumberInput = document.getElementById('chapter-number');
+            chapterNumberInput.removeAttribute('readonly');
+            chapterNumberInput.focus(); // Coloca el foco en el campo de entrada
+        }
+
+        // Captura de eventos de teclado
+        document.addEventListener('keydown', function (event) {
+            // Verifica si la tecla presionada es la flecha arriba o abajo
+            if (event.key === 'ArrowUp') {
+                goToPreviousChapter();
+            } else if (event.key === 'ArrowDown') {
+                goToNextChapter();
+            }
+        });
+
+        // Cargar la primera imagen del capítulo actual al cargar la página
+        updateChapterImage();
+    </script>
+</body>
+
+</html>

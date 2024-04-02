@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Manga</title>
+</head>
+
+<body>
+    <h1>Consulta de Manga</h1>
+    <input type="text" id="titleInput" placeholder="Ingrese el título del manga">
+    <button onclick="searchManga()">Buscar</button>
+    <div id="mangaResults"></div>
+
+    <script>
+        function searchManga() {
+            var title = document.getElementById("titleInput").value;
+            fetch(`https://api.mangadex.org/manga?title=${title}`)
+                .then(response => response.json())
+                .then(data => {
+                    displayResults(data.data);
+                })
+                .catch(error => console.error('Error al obtener los datos:', error));
+        }
+
+        function displayResults(data) {
+if (data && Array.isArray(data)) {
+                                    var resultsDiv = document.getElementById("mangaResults");
+                    resultsDiv.innerHTML = "";
+
+                    data.forEach(manga => {
+                        var title = manga.attributes.title.en;
+                        var description = manga.attributes.description.en;
+                        var coverUrl = manga.attributes.thumbnail ? manga.attributes.thumbnail.url : 'placeholder.jpg'; // Verifica si thumbnail es null o undefined
+
+                        var mangaDiv = document.createElement("div");
+                        mangaDiv.innerHTML = `
+                <h2>${title}</h2>
+                <img src="${coverUrl}" alt="Cover">
+                <p>${description}</p>
+            `;
+                        resultsDiv.appendChild(mangaDiv);
+                    });
+} else {
+                    console.error('Error al obtener los datos:', data);
+                }
+                            }
+
+    </script>
+</body>
+
+</html>

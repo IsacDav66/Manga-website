@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Establecer un tamaño fijo para todas las imágenes */
+        img {
+            width: 200px;
+            /* Cambia el valor según lo que desees */
+            height: auto;
+            /* Esto mantendrá la proporción de aspecto original */
+            display: block;
+            /* Asegúrate de que las imágenes se muestren como bloques */
+            margin: 0 auto;
+            /* Centra las imágenes horizontalmente */
+        }
+    </style>
+    <title>Manga Search</title>
+</head>
+
+<body>
+    <h1>Manga Search</h1>
+    <form action="/" method="POST">
+        <input type="text" name="query" placeholder="Search Manga">
+        <button type="submit">Search</button>
+    </form>
+    <div>
+        {% if manga_data %}
+        <ul>
+            {% for manga in manga_data %}
+            <li>
+                <h3>{{ manga.title }}</h3>
+                <p>{{ manga.description }}</p>
+                {% if manga.cover_url %}
+                <img src="{{ manga.cover_url }}" alt="Portada">
+                {% else %}
+                <p>No cover available</p>
+                {% endif %}
+                <a href="/manga/{{ manga.manga_id }}">View Details</a>
+                <a href="/manga/{{ manga.manga_id }}/chapters">View Chapters</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p>No manga found.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>

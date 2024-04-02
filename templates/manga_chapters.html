@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manga Chapters</title>
+</head>
+
+<body>
+    <h1>Manga Chapters</h1>
+    <ul>
+        {% for chapter in manga_chapters.data %}
+        <li>
+            <a href="/chapter/{{ chapter.id }}">{{ chapter.attributes.title }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>
