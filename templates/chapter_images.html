@@ -37,7 +37,7 @@
 
     <!-- Botón flotante para navegar a un capítulo específico -->
     <div id="floating-button">
-        <input type="number" id="chapter-number" placeholder="Enter chapter number" readonly>
+        <input type="number" id="chapter-number" placeholder="Enter chapter number">
         <button onclick="goToChapter()">Go</button>
     </div>
 
@@ -79,13 +79,6 @@
         function updateChapterImage() {
             const chapterImage = document.getElementById('chapter-image');
             chapterImage.src = chapterImageUrls[currentChapterIndex];
-        }
-
-        // Función para habilitar la edición del campo de número de capítulo
-        function enableChapterInput() {
-            const chapterNumberInput = document.getElementById('chapter-number');
-            chapterNumberInput.removeAttribute('readonly');
-            chapterNumberInput.focus(); // Coloca el foco en el campo de entrada
         }
 
         // Captura de eventos de teclado
