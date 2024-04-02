@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/web/css/charapter.css">
     <title>Chapter Images</title>
     <style>
         body {
@@ -27,6 +28,7 @@
             display: block;
             margin: 0 auto;
         }
+        
     </style>
 </head>
 
@@ -40,7 +42,14 @@
         <input type="number" id="chapter-number" placeholder="Enter chapter number">
         <button onclick="goToChapter()">Go</button>
     </div>
-
+    <div class="contenedor-botonera">
+        <div class="back">
+            <button onclick="goToPreviousChapter()"></button>
+        </div>
+        <div class="next">
+            <button onclick="goToNextChapter()"></button>
+        </div>
+    </div>
     <script>
         // Lista de URLs de imágenes por capítulo
         const chapterImageUrls = {{ chapter_image_urls | tojson }};

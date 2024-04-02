@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, Response
 import requests
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 # Add functions to retrieve manga details and chapters
 
