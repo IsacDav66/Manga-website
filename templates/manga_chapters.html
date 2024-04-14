@@ -9,12 +9,54 @@
 
 <body>
     <h1>Manga Chapters</h1>
+    <p>Manga ID: {{ manga_id }}</p>
     <ul>
-        {% for chapter in manga_chapters.data %}
-        <li>
-            <a href="/chapter/{{ chapter.id }}">{{ chapter.attributes.title }}</a>
-        </li>
-        {% endfor %}
+{% set chapters_with_volume = [] %}
+{% set chapters_without_volume = [] %}
+
+{% for chapter in manga_chapters.data %}
+{% if chapter.attributes.volume is defined and chapter.attributes.volume is not none %}
+{% set _ = chapters_with_volume.append(chapter) %}
+{% else %}
+{% set _ = chapters_without_volume.append(chapter) %}
+{% endif %}
+{% endfor %}
+<h2>Capitulos con volumen </h2>
+{% for chapter in chapters_with_volume | sort(attribute='attributes.volume', reverse=true) %}
+<li>
+    <p>{{ chapter.manga_id }}</p>
+    Volumen {{ chapter.attributes.volume }} - Página {{ chapter.attributes.chapter }}
+    <br>
+    Lenguaje {{chapter.attributes.translatedLanguage}}
+    <br>
+    <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+        {% if chapter.attributes.title == "" %}
+        Sin título
+        {% else %}
+        {{ chapter.attributes.title }}
+        {% endif %}
+        </a> <br> <br>
+
+
+{% endfor %}
+<h2>Capítulos sin volumen</h2>
+{% for chapter in chapters_without_volume %}
+<li>
+    <p>{{ chapter.manga_id }}</p>
+    Página {{ chapter.attributes.chapter }}
+    <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+    {% if chapter.attributes.title == "" %}
+    Sin título
+    {% else %}
+    {{ chapter.attributes.title }}
+    {% endif %}
+    </a> <br> <br>
+</li>
+{% endfor %}
+
+
+
+
     </ul>
 </body>
 

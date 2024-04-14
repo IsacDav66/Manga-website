@@ -32,6 +32,7 @@
             {% for manga in manga_data %}
             <li>
                 <h3>{{ manga.title }}</h3>
+                <p>{{ manga.manga_id }}</p>
                 <p>{{ manga.description }}</p>
                 {% if manga.cover_url %}
                 <img src="{{ manga.cover_url }}" alt="Portada">
