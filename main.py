@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, Response
+import flag
 import requests
 
 app = Flask(__name__, static_url_path='/static')
@@ -166,32 +167,54 @@ def manga_details(manga_id):
 
 @app.route('/manga/<manga_id>/chapters')
 def manga_chapters(manga_id):
-    # Ruta para mostrar los capítulos de un manga
-    print("AA")
-    print(manga_id)
+    print("Capitulos cargando")
+    print("Manga ID: ", manga_id)
     manga_chapters = get_manga_chapters(manga_id)
     
-    
-    # Inicializar la lista external_URL
-    global external_URL 
-    
-    
-    # Ahora external_URL es una lista que contiene los capítulos y sus enlaces externos
-    print(external_URL)
-            
-        
-
     if manga_chapters:
-        return render_template("manga_chapters.html", manga_id=manga_id, manga_chapters=manga_chapters)
+        custom_abbr_mapping = {
+            "EN": "GB",
+            "ES": "ES",
+            "AR": "SA",
+            "MS": "MY"
+        }
+
+        for chapter_data in manga_chapters['data']:
+            chapter = chapter_data['attributes']
+            translated_language = chapter.get('translatedLanguage', '')
+            if translated_language:
+                translated_language_upper = translated_language.split('-')[0].upper()
+                if translated_language_upper in custom_abbr_mapping:
+                    translated_language = custom_abbr_mapping[translated_language_upper]
+                # Obtener el emoji de la bandera utilizando la abreviatura ajustada
+                flag_emoji = get_flag_emoji(translated_language)
+                chapter['flag_emoji'] = flag_emoji
+                print("CHAPTER:", chapter['flag_emoji'])
+            else:
+                chapter['flag_emoji'] = ""
+        
+        # Pasar los datos actualizados a la plantilla, incluido el resultado de la función get_flag_emoji
+        return render_template("manga_chapters.html", manga_id=manga_id, manga_chapters=manga_chapters, get_flag_emoji=get_flag_emoji, custom_abbr_mapping=custom_abbr_mapping)
+
     else:
         return "Manga chapters not found."
+
+
+
+
+
 
 # Funciones para buscar mangas y obtener detalles de la portada
 
 
 
 # Ruta para ver las imágenes de un capítulo
-
+def get_flag_emoji(country_code):
+    try:
+        flag_emoji = flag.flag(country_code)
+        return flag_emoji
+    except ValueError:
+        return ""
 
 if __name__ == '__main__':
     app.run(debug=True)
