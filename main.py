@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, Response, session  
+from flask import Flask, render_template, request, Response, session, redirect, url_for
 import flag
 import requests
 import os
@@ -149,6 +149,7 @@ def proxy_image():
 #===========================================================================================================================
 
 
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #*Ruta principal para la búsqueda e indexado de mangas."""
@@ -163,7 +164,7 @@ def index():
 
         manga_with_cover = []
         if search_response:
-            for manga in search_response['data']:  # Iterar sobre la lista de mangas en search_response
+            for manga in search_response['data']:
                 manga_id = manga['id']
                 cover_url = get_cover_url(manga_id)
                 if cover_url:
@@ -176,7 +177,7 @@ def index():
                         'manga_id': manga_id
                     })
 
-            total_manga = search_response['total']  # Obtener el total de la respuesta de la búsqueda
+            total_manga = search_response['total']
             total_pages = (total_manga + limit - 1) // limit
 
         return render_template("index.html", 
@@ -184,36 +185,72 @@ def index():
                                page=page, 
                                total_pages=total_pages)
 
+
     else:
-        page = request.args.get('page', 1, type=int)  # Obtener número de página
-        offset = (page - 1) * limit
+        # Eliminar la búsqueda almacenada si no hay un parámetro 'page'
+        if 'search_query' in session and not request.args.get('page'):
+            del session['search_query']
 
-        recent_manga_data = get_recent_manga(limit, offset)
+        if 'search_query' in session:  # Si hay una búsqueda almacenada en la sesión
+            query = session['search_query']
+            page = request.args.get('page', 1, type=int)
+            offset = (page - 1) * limit
+            search_response = search_manga(query, limit, offset)
 
-        # Procesar datos de mangas recientes (similar a la búsqueda)
-        recent_manga_with_cover = []
-        if recent_manga_data:
-            for manga in recent_manga_data['data']:
-                manga_id = manga['id']
-                cover_url = get_cover_url(manga_id)
-                if cover_url:
-                    title = manga['attributes']['title'].get('en', 'No title available')
-                    description = manga['attributes']['description'].get('en', 'No description available')
-                    recent_manga_with_cover.append({
-                        'title': title,
-                        'description': description,
-                        'cover_url': cover_url,
-                        'manga_id': manga_id
-                    })
+            manga_with_cover = []
+            if search_response:
+                for manga in search_response['data']:
+                    manga_id = manga['id']
+                    cover_url = get_cover_url(manga_id)
+                    if cover_url:
+                        title = manga['attributes']['title'].get('en', 'No title available')
+                        description = manga['attributes']['description'].get('en', 'No description available')
+                        manga_with_cover.append({
+                            'title': title,
+                            'description': description,
+                            'cover_url': cover_url,
+                            'manga_id': manga_id
+                        })
 
-            total_manga = recent_manga_data['total']
-            total_pages = (total_manga + limit - 1) // limit
+                total_manga = search_response['total']
+                total_pages = (total_manga + limit - 1) // limit
 
-        return render_template("index.html", 
-                               manga_data=recent_manga_with_cover, 
-                               show_recent=True,
-                               page=page, 
-                               total_pages=total_pages)
+            return render_template("index.html", 
+                                   manga_data=manga_with_cover,
+                                   page=page, 
+                                   total_pages=total_pages)
+
+        # Si no hay búsqueda, mostrar mangas recientes
+        else:
+            page = request.args.get('page', 1, type=int)  # Obtener número de página
+            offset = (page - 1) * limit
+
+            recent_manga_data = get_recent_manga(limit, offset)
+
+            # Procesar datos de mangas recientes (similar a la búsqueda)
+            recent_manga_with_cover = []
+            if recent_manga_data:
+                for manga in recent_manga_data['data']:
+                    manga_id = manga['id']
+                    cover_url = get_cover_url(manga_id)
+                    if cover_url:
+                        title = manga['attributes']['title'].get('en', 'No title available')
+                        description = manga['attributes']['description'].get('en', 'No description available')
+                        recent_manga_with_cover.append({
+                            'title': title,
+                            'description': description,
+                            'cover_url': cover_url,
+                            'manga_id': manga_id
+                        })
+
+                total_manga = recent_manga_data['total']
+                total_pages = (total_manga + limit - 1) // limit
+
+            return render_template("index.html", 
+                                   manga_data=recent_manga_with_cover, 
+                                   show_recent=True,
+                                   page=page, 
+                                   total_pages=total_pages)
 
 # Rutas para detalles y capítulos de un manga
 
