@@ -12,85 +12,59 @@
     <p>Manga ID: {{ manga_id }}</p>
     <ul>
 
-{% set chapters_with_volume = [] %}
-{% set chapters_without_volume = [] %}
+        <h2>Capítulos con volumen</h2>
+        {% for chapter in chapters_with_volume %}
+        <li>
+            <p>{{ chapter.manga_id }}</p>
+            Volumen {{ chapter.volume }} - Página {{ chapter.chapter }}
+            <br>
+            Lenguaje {{ chapter.translatedLanguage }}
+            {% if chapter.translatedLanguage %}
+            {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
+            {% if language_code in custom_abbr_mapping %}
+            <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
+            {% else %}
+            <span>{{ get_flag_emoji(language_code) }}</span>
+            {% endif %}
+            {% endif %}
+            <br>
+            <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+                {% if chapter.title == "" %}
+                Sin título
+                {% else %}
+                {{ chapter.title }}
+                {% endif %}
+            </a>
+            <br><br>
+        </li>
+        {% endfor %}
 
-{% for chapter in manga_chapters.data %}
-    {% if chapter.attributes.volume is defined and chapter.attributes.volume is not none %}
-        {% set _ = chapters_with_volume.append(chapter) %}
-    {% else %}
-        {% set _ = chapters_without_volume.append(chapter) %}
-    {% endif %}
-{% endfor %}
-
-<h2>Capitulos con volumen </h2>
-
-{% for chapter in chapters_with_volume | sort(attribute='attributes.volume', reverse=true) %}
-<li>
-    <p>{{ chapter.manga_id }}</p>
-    Volumen {{ chapter.attributes.volume }} - Página {{ chapter.attributes.chapter }}
-    <br>
-    Lenguaje {{ chapter.attributes.translatedLanguage }}
-    {% if chapter.attributes.translatedLanguage %}
-    {% set language_code = chapter.attributes.translatedLanguage.split('-')[0].upper() %}
-    {% if language_code in custom_abbr_mapping %}
-    <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
-    {% else %}
-    <span>{{ get_flag_emoji(language_code) }}</span>
-    {% endif %}
-    {% endif %}
-    <br>
-    <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
-        {% if chapter.attributes.title == "" %}
-        Sin título
-        {% else %}
-        {{ chapter.attributes.title }}
-        {% endif %}
-    </a>
-    <br><br>
-</li>
-{% endfor %}
-
-
-
-
-
-
-
-
-
-
-<h2>Capítulos sin volumen</h2>
-
-{% for chapter in chapters_without_volume %}
-<li>
-    <p>{{ chapter.manga_id }}</p>
-    Página {{ chapter.attributes.chapter }}
-    <br>
-    Lenguaje {{ chapter.attributes.translatedLanguage }}
-    {% if chapter.attributes.translatedLanguage %}
-    {% set language_code = chapter.attributes.translatedLanguage.split('-')[0].upper() %}
-    {% if language_code in custom_abbr_mapping %}
-    <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
-    {% else %}
-    <span>{{ get_flag_emoji(language_code) }}</span>
-    {% endif %}
-    {% endif %}
-    <br>
-    <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
-        {% if chapter.attributes.title == "" %}
-        Sin título
-        {% else %}
-        {{ chapter.attributes.title }}
-        {% endif %}
-    </a>
-    <br><br>
-</li>
-{% endfor %}
-
-
-
-
+        <h2>Capítulos sin volumen</h2>
+        {% for chapter in chapters_without_volume %}
+        <li>
+            <p>{{ chapter.manga_id }}</p>
+            Página {{ chapter.chapter }}
+            <br>
+            Lenguaje {{ chapter.translatedLanguage }}
+            {% if chapter.translatedLanguage %}
+            {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
+            {% if language_code in custom_abbr_mapping %}
+            <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
+            {% else %}
+            <span>{{ get_flag_emoji(language_code) }}</span>
+            {% endif %}
+            {% endif %}
+            <br>
+            <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+                {% if chapter.title == "" %}
+                Sin título
+                {% else %}
+                {{ chapter.title }}
+                {% endif %}
+            </a>
+            <br><br>
+        </li>
+        {% endfor %}
     </ul>
 </body>
 

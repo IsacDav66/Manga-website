@@ -1,8 +1,12 @@
-from flask import Flask, render_template, request, Response
+from flask import Flask, render_template, request, Response, session  
 import flag
 import requests
+import os
 
 app = Flask(__name__, static_url_path='/static')
+app.secret_key = os.urandom(24)  # Genera una clave secreta aleatoria
+
+
 external_URL = []
 #===========================================================================================================================
 
@@ -27,15 +31,18 @@ def get_manga_chapters(manga_id):
         return response.json()
     return None
 
-def search_manga(query):
-    #*Realiza una búsqueda de mangas utilizando el título."""
+def search_manga(query, limit=20, offset=0):
+    """Realiza una búsqueda de mangas utilizando el título y paginación."""
     base_url = "https://api.mangadex.org"
     search_url = f"{base_url}/manga"
-    params = {'title': query}
+    params = {
+        'title': query,
+        'limit': limit,
+        'offset': offset
+    }
     response = requests.get(search_url, params=params)
     if response.status_code == 200:
-        data = response.json()
-        return data['data']
+        return response.json()  # Devolver la respuesta JSON completa
     return None
 # Ruta principal para la búsqueda e indexado de mangas
 
@@ -48,6 +55,19 @@ def get_cover_filename(manga_id):
         if data["result"] == "ok" and data["total"] > 0:
             return data["data"][0]["attributes"]["fileName"]
     return None
+
+def get_recent_manga(limit=20, offset=0):
+    """Obtiene una lista de mangas recientes de Mangadex con paginación."""
+    url = "https://api.mangadex.org/manga"
+    params = {
+        'limit': limit,
+        'offset': offset,
+        'order[latestUploadedChapter]': 'desc'
+    }
+    response = requests.get(url, params=params)
+    if response.status_code == 200:
+        return response.json()  # Devolver la respuesta JSON completa
+    return []
 
 #===========================================================================================================================
 
@@ -132,12 +152,18 @@ def proxy_image():
 @app.route('/', methods=['GET', 'POST'])
 def index():
     #*Ruta principal para la búsqueda e indexado de mangas."""
+    limit = 20  # Define 'limit' aquí, fuera de las ramas if/else
+
     if request.method == 'POST':
         query = request.form.get('query')
-        manga_data = search_manga(query)
+        session['search_query'] = query  # Almacenar la consulta de búsqueda en la sesión
+        page = request.args.get('page', 1, type=int)
+        offset = (page - 1) * limit
+        search_response = search_manga(query, limit, offset)  # Obtener la respuesta de la búsqueda
+
         manga_with_cover = []
-        if manga_data:
-            for manga in manga_data:
+        if search_response:
+            for manga in search_response['data']:  # Iterar sobre la lista de mangas en search_response
                 manga_id = manga['id']
                 cover_url = get_cover_url(manga_id)
                 if cover_url:
@@ -149,10 +175,45 @@ def index():
                         'cover_url': cover_url,
                         'manga_id': manga_id
                     })
-        return render_template("index.html", manga_data=manga_with_cover)
-    else:
-        return render_template("index.html")
 
+            total_manga = search_response['total']  # Obtener el total de la respuesta de la búsqueda
+            total_pages = (total_manga + limit - 1) // limit
+
+        return render_template("index.html", 
+                               manga_data=manga_with_cover,
+                               page=page, 
+                               total_pages=total_pages)
+
+    else:
+        page = request.args.get('page', 1, type=int)  # Obtener número de página
+        offset = (page - 1) * limit
+
+        recent_manga_data = get_recent_manga(limit, offset)
+
+        # Procesar datos de mangas recientes (similar a la búsqueda)
+        recent_manga_with_cover = []
+        if recent_manga_data:
+            for manga in recent_manga_data['data']:
+                manga_id = manga['id']
+                cover_url = get_cover_url(manga_id)
+                if cover_url:
+                    title = manga['attributes']['title'].get('en', 'No title available')
+                    description = manga['attributes']['description'].get('en', 'No description available')
+                    recent_manga_with_cover.append({
+                        'title': title,
+                        'description': description,
+                        'cover_url': cover_url,
+                        'manga_id': manga_id
+                    })
+
+            total_manga = recent_manga_data['total']
+            total_pages = (total_manga + limit - 1) // limit
+
+        return render_template("index.html", 
+                               manga_data=recent_manga_with_cover, 
+                               show_recent=True,
+                               page=page, 
+                               total_pages=total_pages)
 
 # Rutas para detalles y capítulos de un manga
 
@@ -164,7 +225,6 @@ def manga_details(manga_id):
         return render_template("manga_details.html", manga_details=manga_details)
     else:
         return "Manga details not found."
-
 @app.route('/manga/<manga_id>/chapters')
 def manga_chapters(manga_id):
     print("Capitulos cargando")
@@ -179,6 +239,9 @@ def manga_chapters(manga_id):
             "MS": "MY"
         }
 
+        chapters_with_volume = []
+        chapters_without_volume = []
+
         for chapter_data in manga_chapters['data']:
             chapter = chapter_data['attributes']
             translated_language = chapter.get('translatedLanguage', '')
@@ -192,13 +255,25 @@ def manga_chapters(manga_id):
                 print("CHAPTER:", chapter['flag_emoji'])
             else:
                 chapter['flag_emoji'] = ""
+
+            # Separar capítulos con y sin volumen
+            if chapter.get('volume'):
+                chapters_with_volume.append(chapter)
+            else:
+                chapters_without_volume.append(chapter)
         
-        # Pasar los datos actualizados a la plantilla, incluido el resultado de la función get_flag_emoji
-        return render_template("manga_chapters.html", manga_id=manga_id, manga_chapters=manga_chapters, get_flag_emoji=get_flag_emoji, custom_abbr_mapping=custom_abbr_mapping)
+        # Ordenar capítulos con volumen por atributo 'volume' como entero (de mayor a menor)
+        chapters_with_volume.sort(key=lambda chapter: (-int(chapter['volume']), -int(chapter['chapter'])))
+        chapters_without_volume.sort(key=lambda chapter: (-int(chapter['chapter'])))
+        # Pasar los datos actualizados a la plantilla
+        return render_template("manga_chapters.html", manga_id=manga_id, 
+                               chapters_with_volume=chapters_with_volume,
+                               chapters_without_volume=chapters_without_volume, 
+                               get_flag_emoji=get_flag_emoji, 
+                               custom_abbr_mapping=custom_abbr_mapping)
 
     else:
         return "Manga chapters not found."
-
 
 
 
@@ -215,6 +290,8 @@ def get_flag_emoji(country_code):
         return flag_emoji
     except ValueError:
         return ""
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
