@@ -1,0 +1,77 @@
+.container{
+    background: #02030A;
+    /*border: red;*/
+    /*border-style: dotted;*/
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #02030A;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    border: #02030A;;
+    border-style: double;
+}
+
+.manga-item {
+    text-align: center;
+    /* Remove flexbox properties */
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+    border: #02030A;;
+    border-style: double;
+    overflow: hidden; /* Add this line */
+}
+
+img {
+    max-width: 100px;
+    max-height: 100px; /* Establece la altura máxima deseada */
+    width: auto;
+    height: auto;
+    object-fit: contain; /* Mantiene la relación de aspecto */
+    /*border: #02030A;;
+    border-style: double;*/
+    opacity: 1;
+    transition: opacity 0.5s ease-in-out; /* Ajusta la duración y la función de tiempo según tus preferencias */
+}
+.portadas{
+    border: #02030A;
+    border-style: double;
+}
+.titulo-manga {
+  font-size: 16px; /* Tamaño de fuente predeterminado */
+  font-weight: bold;
+  color: #a1acff;
+  border: #02030A;
+  border-style: double;
+}
+
+h1{
+    color: #a1acff;
+}
+.pagination{
+    color: aquamarine;
+}
+
+@media (min-width: 480px) {
+  img {
+    max-width: 300px;
+    max-height: 300px; 
+  }
+
+  .titulo-manga {
+    font-size: 20px;
+  }
+}
+
+
+
+

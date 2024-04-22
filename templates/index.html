@@ -17,77 +17,94 @@
             /* Centra las imágenes horizontalmente */
         }
     </style>
+    <link rel="stylesheet" href="../static/web/css/style.css">
+    <link rel="stylesheet" href="../static/web/css/Switch_titulo.css">
     <title>Manga Search</title>
 </head>
 
 <body>
-    <h1>
-        {% if show_recent %}
-        Mangas Recientes
-        {% else %}
-        Manga Search
-        {% endif %}
-    </h1>
+    <div class="container">
+        <h1>
+            {% if show_recent %}
+            Mangas Recientes
+            {% else %}
+            Manga Search
+            {% endif %}
+        </h1>
 
-    <form action="/" method="POST">
-        <input type="text" name="query" placeholder="Search Manga">
-        <button type="submit">Search</button>
-    </form>
+        <form action="/" method="POST">
+            <input type="text" name="query" placeholder="Search Manga">
+            <button type="submit">Search</button>
+        </form>
 
-    <div>
-        {% if manga_data %}
-        <ul>
-            {% for manga in manga_data %}
-            <li>
-                <h3>{{ manga.title }}</h3>
-                <p>{{ manga.manga_id }}</p>
-                <p>{{ manga.description }}</p>
-                {% if manga.cover_url %}
-                <img src="{{ manga.cover_url }}" alt="Portada">
+        <label class="switch">
+            <input type="checkbox" id="title-switch">
+            <span class="slider"></span>
+        </label>
+        Mostrar títulos
+
+        <div>
+            <div class="portadas">
+                {% if manga_data %}
+                <div class="grid-container">
+                    {% for manga in manga_data %}
+                    <div class="manga-item">
+                        
+                        <!--<p>{{ manga.manga_id }}</p>-->
+                        <!--<p>{{ manga.description }}</p>-->
+                        {% if manga.cover_url %}
+                        <img src="{{ manga.cover_url }}" alt="Portada">
+                        {% else %}
+                        <p>No cover available</p>
+                        {% endif %}
+                        <div class="titulo-manga">{{ manga.title }}</div>
+                        <!--<a href="/manga/{{ manga.manga_id }}">View Details</a>
+                        <a href="/manga/{{ manga.manga_id }}/chapters">View Chapters</a>-->
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="pagination">
+            {% if page > 1 %}
+            <a href="/?page={{ page - 1 }}">Anterior</a>
+            {% endif %}
+            
+            {% if page <= 3 %} {% set min_page=1 %} {% else %} {% set min_page=page - 2 %} {% endif %} {% if page>= total_pages - 2
+                %}
+                {% set max_page = total_pages %}
                 {% else %}
-                <p>No cover available</p>
+                {% set max_page = page + 2 %}
                 {% endif %}
-                <a href="/manga/{{ manga.manga_id }}">View Details</a>
-                <a href="/manga/{{ manga.manga_id }}/chapters">View Chapters</a>
-            </li>
-            {% endfor %}
-        </ul>
-
-        <div class="pagination">
-        {% if page > 1 %}
-        <a href="/?page={{ page - 1 }}">Anterior</a>
-        {% endif %}
-        
-        {% if page <= 3 %} {% set min_page=1 %} {% else %} {% set min_page=page - 2 %} {% endif %} {% if page>= total_pages - 2
-            %}
-            {% set max_page = total_pages %}
-            {% else %}
-            {% set max_page = page + 2 %}
-            {% endif %}
-        
-            {% if min_page > 1 %}
-            <a href="/?page=1">1</a> ...
-            {% endif %}
-        
-            {% for p in range(min_page, max_page + 1) %}
-            {% if p == page %}
-            {{ p }}
-            {% else %}
-            <a href="/?page={{ p }}">{{ p }}</a>
-            {% endif %}
-            {% endfor %}
-        
-            {% if max_page < total_pages %} ... <a href="/?page={{ total_pages }}">{{ total_pages }}</a>
+            
+                {% if min_page > 1 %}
+                <a href="/?page=1">1</a> ...
                 {% endif %}
-        
-                {% if page < total_pages %} <a href="/?page={{ page + 1 }}">Siguiente</a>
+            
+                {% for p in range(min_page, max_page + 1) %}
+                {% if p == page %}
+                {{ p }}
+                {% else %}
+                <a href="/?page={{ p }}">{{ p }}</a>
+                {% endif %}
+                {% endfor %}
+            
+                {% if max_page < total_pages %} ... <a href="/?page={{ total_pages }}">{{ total_pages }}</a>
                     {% endif %}
-        
-        
-                    {% else %}
-                    No manga found.
-                    {% endif %}
+            
+                    {% if page < total_pages %} <a href="/?page={{ page + 1 }}">Siguiente</a>
+                        {% endif %}
+            
+            
+                        {% else %}
+                        No manga found.
+                        {% endif %}
+        </div>
     </div>
+
+    <script src="../static/web/Js/Switch_titulo.js"></script>
+    <!--<script src="../static/web/Js/Imagenes_efecto.js"></script>-->
+
 </body>
 
 </html>
