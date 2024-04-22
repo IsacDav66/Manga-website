@@ -20,3 +20,10 @@ No funciona:
 
 13:54 main.py
 18 de abril 23:54 index.html
+
+
+12:24 main.py---------------
+
+
+----------------------------------
+En la modulacion no se crea la sesion

@@ -11,7 +11,6 @@
     <h1>Manga Chapters</h1>
     <p>Manga ID: {{ manga_id }}</p>
     <ul>
-
         <h2>Capítulos con volumen</h2>
         {% for chapter in chapters_with_volume %}
         <li>
@@ -28,6 +27,7 @@
             {% endif %}
             {% endif %}
             <br>
+            <p>ID del capítulo: {{ chapter.id }}</p> <!-- Agregar esta línea -->
             <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
                 {% if chapter.title == "" %}
                 Sin título
@@ -55,6 +55,7 @@
             {% endif %}
             {% endif %}
             <br>
+            <p>ID del capítulo: {{ chapter.id }}</p> <!-- Agregar esta línea -->
             <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
                 {% if chapter.title == "" %}
                 Sin título
