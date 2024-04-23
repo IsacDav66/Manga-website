@@ -19,30 +19,36 @@
     </style>
     <link rel="stylesheet" href="../static/web/css/style.css">
     <link rel="stylesheet" href="../static/web/css/Switch_titulo.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
     <title>Manga Search</title>
 </head>
 
 <body>
     <div class="container">
-        <h1>
-            {% if show_recent %}
-            Mangas Recientes
-            {% else %}
-            Manga Search
-            {% endif %}
-        </h1>
+        
 
         <form action="/" method="POST">
-            <input type="text" name="query" placeholder="Search Manga">
-            <button type="submit">Search</button>
+            <div class="input-container">
+                <img src="../static/web/Img/svg/Buscar.svg" alt="buscar.svg">
+                <input class="barra-busqueda" type="text" name="query" placeholder="Buscar">
+            </div>
+            <!--<button type="submit">Search</button>-->
         </form>
 
         <label class="switch">
             <input type="checkbox" id="title-switch">
             <span class="slider"></span>
         </label>
-        Mostrar títulos
-
+        <img class="icon-texto" src="../static/web/Img/svg/Texto.svg" alt="texto.svg">
+        <div class="busqueda-txt">
+            {% if show_recent %}
+            Publicaciones recientes
+            {% else %}
+            Resultados de tu busqueda
+            {% endif %}
+        </div>
         <div>
             <div class="portadas">
                 {% if manga_data %}

@@ -4,6 +4,8 @@
   display: inline-block;
   width: 60px;
   height: 34px;
+  margin-left: 10px;
+  vertical-align: middle;
 }
 
 .switch input { 
@@ -22,6 +24,7 @@
   background-color: #ccc;
   -webkit-transition: .4s;
   transition: .4s;
+  border-radius: 50px;
 }
 
 .slider:before {
@@ -34,6 +37,7 @@
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
+  border-radius: 50px;
 }
 
 input:checked + .slider {
@@ -63,4 +67,11 @@ input:checked + .slider:before {
 .titulo-manga{
     display: none;
     
+}
+
+.icon-texto {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    border-radius: 0px;
 }
