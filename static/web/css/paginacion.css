@@ -1,0 +1,47 @@
+.pagination{
+    color:black;
+    text-align:-webkit-center;
+}
+.enlace-paginacion{
+    background-color: aliceblue;
+        padding: 5px;
+    margin: 2px;
+    border-radius: 20px;
+    color: #000;
+text-align: center;
+font-family: "Inconsolata";
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+text-decoration: none;
+}
+
+.enlace-paginacion-activo{
+    background-color: #2196f3;
+    padding: 5px;
+    border-radius: 10px;
+    color: #000;
+text-align: center;
+font-family: "Inconsolata";
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+text-decoration: none;
+}
+
+.numero-paginacion{
+    width: max-content;
+    height: auto;
+    flex-shrink: 0;
+    border-radius: 20px;
+    background: #6F6F6F;
+
+    padding: 10px;
+    margin: 10px;
+}
+
+.icon-back-next{
+    width: 10px;
+height: 17px;
+display: inherit;
+}

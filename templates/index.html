@@ -19,9 +19,16 @@
     </style>
     <link rel="stylesheet" href="../static/web/css/style.css">
     <link rel="stylesheet" href="../static/web/css/Switch_titulo.css">
+    <link rel="stylesheet" href="../static/web/css/paginacion.css">
+    <!--Fuentes -->
+    <!--Julius Sans One -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+    <!--Inconsolata-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
     <title>Manga Search</title>
 </head>
 
@@ -72,39 +79,43 @@
             </div>
 
             <div class="pagination">
-            {% if page > 1 %}
-            <a href="/?page={{ page - 1 }}">Anterior</a>
-            {% endif %}
-            
-            {% if page <= 3 %} {% set min_page=1 %} {% else %} {% set min_page=page - 2 %} {% endif %} {% if page>= total_pages - 2
-                %}
-                {% set max_page = total_pages %}
-                {% else %}
-                {% set max_page = page + 2 %}
-                {% endif %}
-            
-                {% if min_page > 1 %}
-                <a href="/?page=1">1</a> ...
-                {% endif %}
-            
-                {% for p in range(min_page, max_page + 1) %}
-                {% if p == page %}
-                {{ p }}
-                {% else %}
-                <a href="/?page={{ p }}">{{ p }}</a>
-                {% endif %}
-                {% endfor %}
-            
-                {% if max_page < total_pages %} ... <a href="/?page={{ total_pages }}">{{ total_pages }}</a>
+                <div class="numero-paginacion">
+                    {% if page > 1 %}
+                        <a href="/?page={{ page - 1 }}" class="enlace-paginacion"><img class="icon-back-next" src="../static/web/Img/svg/Back-icon.svg" alt="Back-icon"></a>
                     {% endif %}
-            
-                    {% if page < total_pages %} <a href="/?page={{ page + 1 }}">Siguiente</a>
-                        {% endif %}
-            
-            
+                    
+                    {% if page <= 3 %} {% set min_page=1 %} {% else %} {% set min_page=page - 2 %} {% endif %} {% if page>= total_pages - 2%}
+                        {% set max_page = total_pages %}
+                    {% else %}
+                        {% set max_page = page + 2 %}
+                    {% endif %}
+                    
+                    {% if min_page > 1 %}
+                        <a href="/?page=1" class="enlace-paginacion">1</a> ...
+                    {% endif %}
+                    
+                    {% for p in range(min_page, max_page + 1) %}
+                        {% if p == page %}
+                            <span class="enlace-paginacion-activo">{{ p }}</span>
                         {% else %}
-                        No manga found.
+                        <a href="/?page={{ p }}" class="enlace-paginacion">{{ p }}</a>
                         {% endif %}
+
+                        {% endfor %}
+                    
+                        {% if max_page < total_pages %}
+                        ... <a href="/?page={{ total_pages }}" class="enlace-paginacion">{{ total_pages }}</a>
+                        {% endif %}
+                    
+                        {% if page < total_pages %} 
+                            <a href="/?page={{ page + 1 }}" class="enlace-paginacion"><img class="icon-back-next" src="../static/web/Img/svg/Next-icon.svg" alt="Next-icon"></a>
+                        {% endif %}
+                    
+                    
+                    {% else %}
+                    No manga found.
+                    {% endif %}
+                </div>
         </div>
     </div>
 
