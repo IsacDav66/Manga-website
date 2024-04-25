@@ -14,12 +14,18 @@ font-style: normal;
 font-weight: 400;
 line-height: normal;
 text-decoration: none;
+
+display: inline-block; /* Mantiene los elementos en línea */
+    text-align: center; /* Centra el contenido horizontalmente */
+    line-height: 30px; /* Ajusta la altura de línea para centrar verticalmente */
+    min-width: 20px;
+    height: auto;
 }
 
 .enlace-paginacion-activo{
     background-color: #2196f3;
     padding: 5px;
-    border-radius: 10px;
+    border-radius: 20px;
     color: #000;
 text-align: center;
 font-family: "Inconsolata";
@@ -27,21 +33,38 @@ font-style: normal;
 font-weight: 400;
 line-height: normal;
 text-decoration: none;
+
+    display: inline-block;
+    text-align: center;
+    line-height: 30px;
+    min-width: 20px;
+    height: auto;
 }
 
 .numero-paginacion{
-    width: max-content;
+    width: 100%;
     height: auto;
     flex-shrink: 0;
     border-radius: 20px;
     background: #6F6F6F;
 
-    padding: 10px;
-    margin: 10px;
+    padding: 5px;
+    padding-right: 0px;
+    padding-left: 0px;
+
+    margin-top: 10px;
+    margin-bottom: 10px;
+
 }
 
 .icon-back-next{
     width: 10px;
 height: 17px;
 display: inherit;
+vertical-align: text-top;
+}
+
+.puntos{
+    color: white;
+    font-family: monospace;
 }

@@ -18,6 +18,7 @@ def get_manga_chapters(manga_id):
 
 def search_manga(query, limit=20, offset=0):
     """Realiza una búsqueda de mangas utilizando el título y paginación."""
+    offset = min(offset, 9980)  # Limitar el offset a un máximo de 9980
     base_url = "https://api.mangadex.org"
     search_url = f"{base_url}/manga"
     params = {
@@ -41,7 +42,9 @@ def get_cover_filename(manga_id):
     return None
 
 def get_recent_manga(limit=20, offset=0):
-    """Obtiene una lista de mangas recientes de Mangadex con paginación."""
+    """Obtiene una lista de mangas recientes de Mangadex con paginación y límite de offset."""
+    offset = min(offset, 9980)  # Limitar el offset a un máximo de 9980
+
     url = "https://api.mangadex.org/manga"
     params = {
         'limit': limit,
