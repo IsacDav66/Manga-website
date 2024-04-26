@@ -51,6 +51,8 @@ def manga_details(manga_id):
     else:
         return "Manga details not found."
 
+import re
+
 def manga_chapters(manga_id):
     """Muestra los capítulos de un manga."""
     from src.models.manga_model import get_manga_chapters  # Importación local
@@ -89,12 +91,16 @@ def manga_chapters(manga_id):
 
             # Separar capítulos con y sin volumen
             if chapter.get('volume'):
+                cleaned_volume = re.sub(r'\D', '', chapter['volume'])  # Eliminar todos los caracteres que no sean dígitos
+                chapter['volume'] = cleaned_volume
+                cleaned_chapter = re.sub(r'\D', '', chapter['chapter'])  # Eliminar todos los caracteres que no sean dígitos
+                chapter['chapter'] = cleaned_chapter
                 chapters_with_volume.append(chapter)
             else:
                 chapters_without_volume.append(chapter)
 
         # Ordenar y agrupar capítulos con volumen
-        chapters_with_volume.sort(key=lambda chapter: (int(chapter['volume']), int(chapter['chapter'])), reverse=True)
+        chapters_with_volume.sort(key=lambda chapter: (int(float(chapter['volume'])), int(float(chapter['chapter']))), reverse=True)
         grouped_chapters = []
         for volume, chapters in groupby(chapters_with_volume, key=lambda chapter: chapter['volume']):
             volume_group = {
@@ -108,7 +114,7 @@ def manga_chapters(manga_id):
                 })
             grouped_chapters.append(volume_group)
 
-        chapters_without_volume.sort(key=lambda chapter: int(chapter['chapter']), reverse=True)
+        chapters_without_volume.sort(key=lambda chapter: int(float(chapter['chapter'])), reverse=True)
         grouped_chapters_without_volume = []
         for chapter_number, chapters in groupby(chapters_without_volume, key=lambda chapter: chapter['chapter']):
             grouped_chapters_without_volume.append({
@@ -124,5 +130,3 @@ def manga_chapters(manga_id):
                             custom_abbr_mapping=custom_abbr_mapping)
     else:
         return "Manga chapters not found."
-
-
