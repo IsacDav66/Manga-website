@@ -62,7 +62,7 @@
                 <div class="grid-container">
                     {% for manga in manga_data %}
                     <div class="manga-item">
-                        
+                        <a href="/manga/{{ manga.manga_id }}/chapters" class="text-decoloration">
                         <!--<p>{{ manga.manga_id }}</p>-->
                         <!--<p>{{ manga.description }}</p>-->
                         {% if manga.cover_url %}
@@ -71,8 +71,8 @@
                         <p>No cover available</p>
                         {% endif %}
                         <div class="titulo-manga">{{ manga.title }}</div>
-                        <!--<a href="/manga/{{ manga.manga_id }}">View Details</a>
-                        <a href="/manga/{{ manga.manga_id }}/chapters">View Chapters</a>-->
+                        <!--<a href="/manga/{{ manga.manga_id }}">View Details</a>-->
+                        </a>
                     </div>
                     {% endfor %}
                 </ul>

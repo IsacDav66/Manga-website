@@ -1,0 +1,32 @@
+body{
+    background-color: #02030A;
+    color: whitesmoke;
+}
+
+.volumen{
+    background-color: rgb(41, 79, 80);
+}
+
+.capitulo{
+    background-color: brown;
+}
+
+.contenido {
+  display: none;
+}
+
+.contenido.activo {
+  display: block;
+}
+
+.capitulo-sin-volumen{
+    background-color: rgb(38, 158, 38);
+}
+
+.contenido-sin-volumen {
+  display: none;
+}
+
+.contenido2.activo {
+  display: block;
+}

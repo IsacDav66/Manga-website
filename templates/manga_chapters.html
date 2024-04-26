@@ -4,69 +4,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/web/css/manga-chapters.css">
     <title>Manga Chapters</title>
 </head>
 
 <body>
     <h1>Manga Chapters</h1>
     <p>Manga ID: {{ manga_id }}</p>
-    <ul>
+    <div>
         <h2>Capítulos con volumen</h2>
-        {% for chapter in chapters_with_volume %}
-        <li>
-            <p>{{ chapter.manga_id }}</p>
-            Volumen {{ chapter.volume }} - Página {{ chapter.chapter }}
-            <br>
-            Lenguaje {{ chapter.translatedLanguage }}
-            {% if chapter.translatedLanguage %}
-            {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
-            {% if language_code in custom_abbr_mapping %}
-            <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
-            {% else %}
-            <span>{{ get_flag_emoji(language_code) }}</span>
-            {% endif %}
-            {% endif %}
-            <br>
-            <p>ID del capítulo: {{ chapter.id }}</p> <!-- Agregar esta línea -->
-            <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
-                {% if chapter.title == "" %}
-                Sin título
-                {% else %}
-                {{ chapter.title }}
-                {% endif %}
-            </a>
-            <br><br>
-        </li>
-        {% endfor %}
+        {% for group in grouped_chapters %}
+            <p class="volumen">Volumen {{ group.volume }}</p>
+        
+            {% for page_group in group.chapter_groups %}
+                <p class="capitulo" id="capitulo-{{ page_group.chapter_number }}">Capitulo {{ page_group.chapter_number }}</p>
 
-        <h2>Capítulos sin volumen</h2>
-        {% for chapter in chapters_without_volume %}
-        <li>
-            <p>{{ chapter.manga_id }}</p>
-            Página {{ chapter.chapter }}
-            <br>
-            Lenguaje {{ chapter.translatedLanguage }}
-            {% if chapter.translatedLanguage %}
-            {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
-            {% if language_code in custom_abbr_mapping %}
-            <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
-            {% else %}
-            <span>{{ get_flag_emoji(language_code) }}</span>
-            {% endif %}
-            {% endif %}
-            <br>
-            <p>ID del capítulo: {{ chapter.id }}</p> <!-- Agregar esta línea -->
-            <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
-                {% if chapter.title == "" %}
-                Sin título
-                {% else %}
-                {{ chapter.title }}
-                {% endif %}
-            </a>
-            <br><br>
-        </li>
+                {% set contador_contenido = 0 %}
+                {% for chapter in page_group.chapters %}
+        
+                    {{ chapter.manga_id }}
+                    <div class="contenido" id="contenido-{{ page_group.chapter_number }}-{{ contador_contenido }}">
+                        Lenguaje {{ chapter.translatedLanguage }}
+                        {% if chapter.translatedLanguage %}
+                            {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
+                                {% if language_code in custom_abbr_mapping %}
+                                <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
+                                {% else %}
+                                <span>{{ get_flag_emoji(language_code) }}</span>
+                                {% endif %}
+                        {% endif %}
+                        
+                        <!--ID del capítulo: {{ chapter.id }}-->
+                        <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+                        {% if chapter.title == "" %}
+                            Sin título
+                        {% else %}
+                            {{ chapter.title }}
+                        {% endif %}
+                        </a>
+                    </div>
+                    {% set contador_contenido = contador_contenido + 1 %}
+                    
+                    
+        
+                {% endfor %}
+        
+            {% endfor %}
+        
         {% endfor %}
-    </ul>
+        
+        <br>
+        <h2>Capítulos sin volumen</h2>
+{% for group in grouped_chapters_without_volume %}
+    <div class="capitulo-container">
+        <p class="capitulo" data-capitulo-id="{{ group.chapter_number }}">Página {{ group.chapter_number }}</p>
+        <div class="contenido-container">
+            {% set contador_contenido = 0 %}
+            {% for chapter in group.chapters %}
+                <div class="contenido" id="contenido-sin-volumen-{{ group.chapter_number }}-{{ contador_contenido }}">
+                    Lenguaje {{ chapter.translatedLanguage }}
+                    {% if chapter.translatedLanguage %}
+                        {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
+                        {% if language_code in custom_abbr_mapping %}
+                            <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
+                        {% else %}
+                            <span>{{ get_flag_emoji(language_code) }}</span>
+                        {% endif %}
+                    {% endif %}
+                    
+                    <!--<p>ID del capítulo: {{ chapter.id }}</p>-->
+                    <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+                    {% if chapter.title == "" %}
+                        Sin título
+                    {% else %}
+                        {{ chapter.title }}
+                    {% endif %}
+                    </a>
+                </div>
+                {% set contador_contenido = contador_contenido + 1 %}
+                
+            {% endfor %}
+        
+        {% endfor %}
+    </div>
+    <script>
+        const capitulos = document.querySelectorAll('.capitulo');
+
+            capitulos.forEach(capitulo => {
+                capitulo.addEventListener('click', () => {
+                    const capituloId = capitulo.id.split('-')[1];
+                    const contenidos = document.querySelectorAll(`[id^="contenido-${capituloId}-"]`);
+                    console.log(contenidos)
+                    contenidos.forEach(contenido => {
+                        contenido.classList.toggle('activo'); // Alternar clase "activo"
+            
+                    });
+                });
+            });
+
+
+
+       const capitulos2 = document.querySelectorAll('.capitulo');
+
+        capitulos2.forEach(capitulo => {
+            capitulo.addEventListener('click', () => {
+                const capituloId = capitulo.dataset.capituloId;
+                const contenidoContainer = capitulo.nextElementSibling;
+                const contenidos = contenidoContainer.querySelectorAll(`.contenido[id^="contenido-sin-volumen-${capituloId}-"]`);
+
+                contenidos.forEach(contenido => {
+                    contenido.classList.toggle('activo');
+                });
+            });
+        });
+
+
+
+    </script>
+    
+
 </body>
 
 </html>

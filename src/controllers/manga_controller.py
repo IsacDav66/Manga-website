@@ -55,11 +55,12 @@ def manga_chapters(manga_id):
     """Muestra los capítulos de un manga."""
     from src.models.manga_model import get_manga_chapters  # Importación local
     from src.utils.general_utils import get_flag_emoji  # Importación local
+    from itertools import groupby  # Importar groupby
 
     print("Capitulos cargando")
     print("Manga ID: ", manga_id)
     manga_chapters = get_manga_chapters(manga_id)
-    
+
     if manga_chapters:
         custom_abbr_mapping = {
             "EN": "GB",
@@ -67,45 +68,61 @@ def manga_chapters(manga_id):
             "AR": "SA",
             "MS": "MY"
         }
-
         chapters_with_volume = []
         chapters_without_volume = []
-
         for chapter_data in manga_chapters['data']:
             chapter = chapter_data['attributes']
             chapter['id'] = chapter_data['id']
             translated_language = chapter.get('translatedLanguage', '')
             print(chapter)
+
             if translated_language:
                 translated_language_upper = translated_language.split('-')[0].upper()
                 if translated_language_upper in custom_abbr_mapping:
                     translated_language = custom_abbr_mapping[translated_language_upper]
-                # Obtener el emoji de la bandera utilizando la abreviatura ajustada
-                flag_emoji = get_flag_emoji(translated_language)
-                chapter['flag_emoji'] = flag_emoji
-                print("CHAPTER:", chapter['flag_emoji'])
-            else:
-                chapter['flag_emoji'] = ""
+                    # Obtener el emoji de la bandera utilizando la abreviatura ajustada
+                    flag_emoji = get_flag_emoji(translated_language)
+                    chapter['flag_emoji'] = flag_emoji
+                    print("CHAPTER:", chapter['flag_emoji'])
+                else:
+                    chapter['flag_emoji'] = ""
 
             # Separar capítulos con y sin volumen
             if chapter.get('volume'):
                 chapters_with_volume.append(chapter)
             else:
                 chapters_without_volume.append(chapter)
-                
-        
-        # Ordenar capítulos con volumen por atributo 'volume' como entero (de mayor a menor)
-        chapters_with_volume.sort(key=lambda chapter: (-int(chapter['volume']), -float(chapter['chapter']) if chapter['chapter'] is not None else 0))
-        chapters_without_volume.sort(key=lambda chapter: -int(chapter['chapter']) if chapter['chapter'] is not None else 0)
-        # Pasar los datos actualizados a la plantilla
-        return render_template("manga_chapters.html", manga_id=manga_id, 
-                               chapters_with_volume=chapters_with_volume,
-                               chapters_without_volume=chapters_without_volume, 
-                               get_flag_emoji=get_flag_emoji, 
-                               custom_abbr_mapping=custom_abbr_mapping)
 
+        # Ordenar y agrupar capítulos con volumen
+        chapters_with_volume.sort(key=lambda chapter: (int(chapter['volume']), int(chapter['chapter'])), reverse=True)
+        grouped_chapters = []
+        for volume, chapters in groupby(chapters_with_volume, key=lambda chapter: chapter['volume']):
+            volume_group = {
+                'volume': volume,
+                'chapter_groups': []  # Lista para subgrupos por página
+            }
+            for chapter_number, page_chapters in groupby(chapters, key=lambda chapter: chapter['chapter']):
+                volume_group['chapter_groups'].append({
+                    'chapter_number': chapter_number,
+                    'chapters': list(page_chapters)
+                })
+            grouped_chapters.append(volume_group)
+
+        chapters_without_volume.sort(key=lambda chapter: int(chapter['chapter']), reverse=True)
+        grouped_chapters_without_volume = []
+        for chapter_number, chapters in groupby(chapters_without_volume, key=lambda chapter: chapter['chapter']):
+            grouped_chapters_without_volume.append({
+                'chapter_number': chapter_number,
+                'chapters': list(chapters)
+            })
+
+        # Pasar los datos actualizados a la plantilla
+        return render_template("manga_chapters.html", manga_id=manga_id,
+                            grouped_chapters=grouped_chapters,
+                            grouped_chapters_without_volume=grouped_chapters_without_volume,  # Pasar la nueva estructura
+                            get_flag_emoji=get_flag_emoji,
+                            custom_abbr_mapping=custom_abbr_mapping)
     else:
         return "Manga chapters not found."
-
 
 

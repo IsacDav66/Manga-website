@@ -166,3 +166,9 @@ flex-shrink: 0;
 margin-left: 10px;
 width: 100%;
 }
+
+
+/*-----------------------------*/
+.text-decoloration{
+  text-decoration: none;
+}
