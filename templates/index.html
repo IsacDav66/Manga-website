@@ -30,6 +30,19 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
     <title>Manga Search</title>
+    <style>
+        .cover-image {
+            opacity: 0;
+            /* Comienza con una opacidad de 0 para que la imagen esté invisible */
+            transition: opacity 0.5s ease;
+            /* Agrega una transición suave para la animación */
+        }
+    
+        .cover-image.image-loaded {
+            opacity: 1;
+            /* Cambia la opacidad a 1 cuando la imagen se ha cargado completamente */
+        }
+    </style>
 </head>
 
 <body>
@@ -65,17 +78,17 @@
                         <a href="/manga/{{ manga.manga_id }}/chapters" class="text-decoloration">
                         <!--<p>{{ manga.manga_id }}</p>-->
                         <!--<p>{{ manga.description }}</p>-->
-                        {% if manga.cover_url %}
-                        <img src="{{ manga.cover_url }}" alt="Portada">
-                        {% else %}
-                        <p>No cover available</p>
-                        {% endif %}
-                        <div class="titulo-manga">{{ manga.title }}</div>
+                            {% if manga.cover_url %}
+                                <img src="{{ manga.cover_url }}" alt="Portada" class="cover-image">
+                            {% else %}
+                                <p>No cover available</p>
+                            {% endif %}
+                            <div class="titulo-manga">{{ manga.title }}</div>
                         <!--<a href="/manga/{{ manga.manga_id }}">View Details</a>-->
                         </a>
                     </div>
                     {% endfor %}
-                </ul>
+                </div>
             </div>
 
             <div class="pagination">
@@ -121,6 +134,40 @@
 
     <script src="../static/web/Js/Switch_titulo.js"></script>
     <!--<script src="../static/web/Js/Imagenes_efecto.js"></script>-->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Función para activar la transición de carga de imágenes
+            function activateImageTransition() {
+                $('.cover-image').each(function () {
+                    // Verificar si la imagen ya ha sido cargada antes
+                    if (!$(this).hasClass('image-loaded')) {
+                        // Si no ha sido cargada antes, activar la transición
+                        if (this.complete) {
+                            $(this).addClass('image-loaded');
+                        } else {
+                            $(this).on('load', function () {
+                                $(this).addClass('image-loaded');
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Activar la transición al cargar la página inicialmente
+            activateImageTransition();
+
+            // Activar la transición cuando se navega hacia atrás en el historial del navegador
+            $(window).on('popstate', function (event) {
+                activateImageTransition();
+            });
+        });
+    </script>
+
+
+
+
+
 
 </body>
 

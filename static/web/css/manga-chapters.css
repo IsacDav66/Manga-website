@@ -5,10 +5,20 @@ body{
 
 .volumen{
     background-color: rgb(41, 79, 80);
+        border-radius: 20px;
+    text-align: center;
+    margin: 5px;
+    font-family: "Inconsolata";
 }
 
 .capitulo{
     background-color: brown;
+        border-radius: 20px;
+    text-align: center;
+    margin: 10px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-family: "Inconsolata";
 }
 
 .contenido {
@@ -29,4 +39,92 @@ body{
 
 .contenido2.activo {
   display: block;
+}
+
+.cover-image-big{
+  width: 100%;
+  height: auto;
+}
+
+.descripcion{
+color: #9CCEB9;
+font-family: "Inconsolata";
+font-size: 12px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+.container-sup{
+
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* Ajusta el ancho según tus necesidades */
+    height: 500px; /* Ajusta la altura según tus necesidades */
+
+
+}
+
+.contenedor0{
+   flex: 1; /* Los contenedores 1 y 2 ocupan el mismo espacio */
+    margin: 5px; /* Espacio entre los contenedores */
+     display: flex;
+    flex-direction: row;
+}
+
+.contenedor1, .contenedor2 {
+    flex: 1; /* Los contenedores 1 y 2 ocupan el mismo espacio */
+    margin: 5px; /* Espacio entre los contenedores */
+    align-content: center;
+    text-align: center;
+}
+.contenedor3{
+    margin: 5px; /* Espacio alrededor del contenedor */
+    flex: 2; /* El contenedor 3 ocupa el doble de espacio que los superiores */
+    overflow: auto;
+}
+
+
+.titulo-manga {
+  font-weight: bold;
+  color: #a1acff;
+  border: #02030A;
+  border-style: double;
+
+  color: #9CCEB9;
+text-align: center;
+font-family: "Julius Sans One";
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+ overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.2em; /* ajusta según el tamaño de tu fuente */
+  max-height: 2.4em;
+}
+
+
+
+
+/*---------------------------------------------------------------------------*/
+
+.caps-grupo{
+  color: #9CCEB9;
+font-family: "Inconsolata";
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+}
+
+
+.ir-cap{
+  text-align: center;
+}
+
+.ir-cap a{
+  text-decoration: none;
+  font-family: "Inconsolata";
+  font-size: 12px;
+  color: azure;
 }

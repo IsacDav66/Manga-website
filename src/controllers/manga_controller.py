@@ -52,17 +52,24 @@ def manga_details(manga_id):
         return "Manga details not found."
 
 import re
+import random  # Importa la librería random
 
 def manga_chapters(manga_id):
     """Muestra los capítulos de un manga."""
     from src.models.manga_model import get_manga_chapters  # Importación local
     from src.utils.general_utils import get_flag_emoji  # Importación local
     from itertools import groupby  # Importar groupby
+    
+    from src.models.manga_model import get_manga_details  # Importación local
+    from src.utils.image_utils import get_cover_url  # Importación local
 
     print("Capitulos cargando")
     print("Manga ID: ", manga_id)
     manga_chapters = get_manga_chapters(manga_id)
-
+    
+    manga_details = get_manga_details(manga_id)
+    cover_url = get_cover_url(manga_id)
+    
     if manga_chapters:
         custom_abbr_mapping = {
             "EN": "GB",
@@ -93,8 +100,14 @@ def manga_chapters(manga_id):
             if chapter.get('volume'):
                 cleaned_volume = re.sub(r'\D', '', chapter['volume'])  # Eliminar todos los caracteres que no sean dígitos
                 chapter['volume'] = cleaned_volume
-                cleaned_chapter = re.sub(r'\D', '', chapter['chapter'])  # Eliminar todos los caracteres que no sean dígitos
-                chapter['chapter'] = cleaned_chapter
+                if chapter.get('chapter'):
+                    cleaned_chapter = re.sub(r'\D', '', chapter['chapter']) 
+                    chapter['chapter'] = cleaned_chapter
+                else:
+                    # Asignar un número aleatorio entre 1 y 1000
+                    random_number = random.randint(100, 999)
+                    chapter['chapter'] = f"000{random_number}"
+
                 chapters_with_volume.append(chapter)
             else:
                 chapters_without_volume.append(chapter)
@@ -127,6 +140,8 @@ def manga_chapters(manga_id):
                             grouped_chapters=grouped_chapters,
                             grouped_chapters_without_volume=grouped_chapters_without_volume,  # Pasar la nueva estructura
                             get_flag_emoji=get_flag_emoji,
-                            custom_abbr_mapping=custom_abbr_mapping)
+                            custom_abbr_mapping=custom_abbr_mapping,
+                             manga_details=manga_details,
+                             cover_url=cover_url)
     else:
         return "Manga chapters not found."

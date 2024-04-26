@@ -61,6 +61,11 @@ font-size: 12px;
 font-style: normal;
 font-weight: 400;
 line-height: normal;
+ overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  line-height: 1.2em; /* ajusta según el tamaño de tu fuente */
+  max-height: 2.4em;
 }
 
 h1{

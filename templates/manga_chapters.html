@@ -5,26 +5,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/static/web/css/manga-chapters.css">
+        <!--Fuentes -->
+        <!--Julius Sans One -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Julius+Sans+One&display=swap" rel="stylesheet">
+        <!--Inconsolata-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
     <title>Manga Chapters</title>
 </head>
 
 <body>
-    <h1>Manga Chapters</h1>
-    <p>Manga ID: {{ manga_id }}</p>
+    <!--<p>Manga ID: {{ manga_id }}</p>-->
+    <div class="container-sup">
+        <div class="contenedor0">
+            <div class="contenedor1">
+                {% if cover_url %}
+                <img src="{{ cover_url }}" alt="Portada" class="cover-image-big">
+                {% else %}
+                <p>No cover available</p>
+                {% endif %}
+            </div>
+
+            <div class="contenedor2">
+                <h2 class="titulo-manga">{{ manga_details.data.attributes.title.en }} </h2>
+            </div>
+        </div>
+        <div class="contenedor3">
+           <span class="descripcion">{{ manga_details.data.attributes.description.en }}</span>
+        </div>
+    </div>
+
+
+
     <div>
-        <h2>Capítulos con volumen</h2>
+        <h2 class="caps-grupo">Capítulos con volumen</h2>
         {% for group in grouped_chapters %}
-            <p class="volumen">Volumen {{ group.volume }}</p>
+            <div class="volumen">Volumen {{ group.volume }}</div>
         
             {% for page_group in group.chapter_groups %}
-                <p class="capitulo" id="capitulo-{{ page_group.chapter_number }}">Capitulo {{ page_group.chapter_number }}</p>
+                <div class="capitulo" id="capitulo-{{ page_group.chapter_number }}">Capitulo {{ page_group.chapter_number }}</div>
 
                 {% set contador_contenido = 0 %}
                 {% for chapter in page_group.chapters %}
         
                     {{ chapter.manga_id }}
                     <div class="contenido" id="contenido-{{ page_group.chapter_number }}-{{ contador_contenido }}">
-                        Lenguaje {{ chapter.translatedLanguage }}
+                        <!--Lenguaje {{ chapter.translatedLanguage }}-->
+                        <div class="ir-cap">
                         {% if chapter.translatedLanguage %}
                             {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
                                 {% if language_code in custom_abbr_mapping %}
@@ -42,6 +72,7 @@
                             {{ chapter.title }}
                         {% endif %}
                         </a>
+                        </div>
                     </div>
                     {% set contador_contenido = contador_contenido + 1 %}
                     
@@ -54,7 +85,7 @@
         {% endfor %}
         
         <br>
-        <h2>Capítulos sin volumen</h2>
+        <h2 class="caps-grupo">Capítulos sin volumen</h2>
 {% for group in grouped_chapters_without_volume %}
     <div class="capitulo-container">
         <p class="capitulo" data-capitulo-id="{{ group.chapter_number }}">Página {{ group.chapter_number }}</p>
@@ -62,7 +93,8 @@
             {% set contador_contenido = 0 %}
             {% for chapter in group.chapters %}
                 <div class="contenido" id="contenido-sin-volumen-{{ group.chapter_number }}-{{ contador_contenido }}">
-                    Lenguaje {{ chapter.translatedLanguage }}
+                    <!--Lenguaje {{ chapter.translatedLanguage }}-->
+                    <div class="ir-cap">
                     {% if chapter.translatedLanguage %}
                         {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
                         {% if language_code in custom_abbr_mapping %}
@@ -80,6 +112,7 @@
                         {{ chapter.title }}
                     {% endif %}
                     </a>
+                    </div>
                 </div>
                 {% set contador_contenido = contador_contenido + 1 %}
                 
