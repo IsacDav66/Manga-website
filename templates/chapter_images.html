@@ -4,45 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../static/web/css/charapter.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='web/css/charapter.css') }}">
+    <link rel="stylesheet" href="/static/web/css/charapter.css">
 
+        <!--Inconsolata-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
     <title>Chapter Images</title>
-    <style>
-        body {
-            position: relative;
-            margin: 0;
-            padding-top: 50px;
-            /* Ajusta el padding para que el contenido no quede debajo del botón flotante */
-        }
 
-        #floating-button {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            z-index: 1000;
-            /* Asegura que el botón esté sobre otros elementos */
-        }
-            img {
-            max-height: calc(100vh - 100px);
-            /* Ajusta la altura de la imagen según la altura de la ventana */
-            width: auto;
-            display: block;
-            margin: 0 auto;
-        }
-        
-    </style>
 </head>
 
 <body>
-    <div>
-        <img id="chapter-image" src="{{ current_image }}" alt="Chapter Image">
+    <div class="contenedor-imagen">
+        <img class="current-imagen" id="chapter-image" src="{{ current_image }}" alt="Chapter Image">
     </div>
 
     <!-- Botón flotante para navegar a un capítulo específico -->
     <div id="floating-button">
-        <input type="number" id="chapter-number" placeholder="Enter chapter number">
-        <button onclick="goToChapter()">Go</button>
+        <input class="barra-busqueda" type="number" id="chapter-number" placeholder="Enter chapter number">
     </div>
     <div class="contenedor-botonera">
         <div class="back">
@@ -92,15 +71,24 @@
             chapterImage.src = chapterImageUrls[currentChapterIndex];
         }
 
-        // Captura de eventos de teclado
-        document.addEventListener('keydown', function (event) {
-            // Verifica si la tecla presionada es la flecha arriba o abajo
-            if (event.key === 'ArrowUp') {
-                goToPreviousChapter();
-            } else if (event.key === 'ArrowDown') {
-                goToNextChapter();
-            }
-        });
+
+            // Captura de eventos de teclado en el input
+            document.getElementById('chapter-number').addEventListener('keyup', function (event) {
+                if (event.key === 'Enter') {
+                    goToChapter();
+                }
+            });
+            // Captura de eventos de teclado
+                document.addEventListener('keydown', function (event) {
+                    // Verifica si la tecla presionada es la flecha arriba o abajo
+                    if (event.key === 'ArrowUp') {
+                        goToPreviousChapter();
+                    } else if (event.key === 'ArrowDown') {
+                        goToNextChapter();
+                    }
+                });
+
+
 
         // Cargar la primera imagen del capítulo actual al cargar la página
         updateChapterImage();
