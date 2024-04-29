@@ -17,6 +17,8 @@ app.add_url_rule('/manga/<manga_id>/chapters', view_func=manga_chapters)
 app.add_url_rule('/manga/<manga_id>/chapter/<chapter_id>', view_func=view_chapter_images)
 app.add_url_rule('/proxy-image', view_func=proxy_image)
 
-
+@app.route('/informacion')
+def informacion():
+    return render_template('informacion.html')
 if __name__ == '__main__':
     app.run(debug=True)

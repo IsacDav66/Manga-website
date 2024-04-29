@@ -3,12 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="/static/web/css/manga_url_chapters.css">
+    <title>Capitulos Externos</title>
+
 </head>
 <body>
     {% if external_url %}
-    <p>External URL: {{ external_url }}</p>
-    <iframe width="1000px" height="1000px" src="{{ external_url }}" frameborder="0"></iframe>
+    <!--<p>External URL: {{ external_url }}</p>-->
+    <iframe  src="{{ external_url }}" frameborder="0"></iframe>
     {% else %}
     <p>No external URL available.</p>
     {% endif %}

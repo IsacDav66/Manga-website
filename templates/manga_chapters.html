@@ -14,7 +14,7 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap" rel="stylesheet">
-    <title>Manga Chapters</title>
+    <title>Manga Website</title>
 </head>
 
 <body>
@@ -83,42 +83,51 @@
             {% endfor %}
         
         {% endfor %}
-        
+    </div>   
+
+
+
         <br>
+
+
+    <div>
         <h2 class="caps-grupo">Capítulos sin volumen</h2>
-{% for group in grouped_chapters_without_volume %}
-    <div class="capitulo-container">
-        <p class="capitulo" data-capitulo-id="{{ group.chapter_number }}">Página {{ group.chapter_number }}</p>
-        <div class="contenido-container">
-            {% set contador_contenido = 0 %}
-            {% for chapter in group.chapters %}
-                <div class="contenido" id="contenido-sin-volumen-{{ group.chapter_number }}-{{ contador_contenido }}">
-                    <!--Lenguaje {{ chapter.translatedLanguage }}-->
-                    <div class="ir-cap">
-                    {% if chapter.translatedLanguage %}
-                        {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
-                        {% if language_code in custom_abbr_mapping %}
-                            <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
-                        {% else %}
-                            <span>{{ get_flag_emoji(language_code) }}</span>
+        {% for group in grouped_chapters_without_volume %}
+        <div class="capitulo-container">
+            <p class="capitulo" data-capitulo-id="{{ group.chapter_number }}">Página {{ group.chapter_number }}</p>
+            <div class="contenido-container">
+                {% set contador_contenido = 0 %}
+                {% for chapter in group.chapters %}
+                    <div class="contenido" id="contenido-sin-volumen-{{ group.chapter_number }}-{{ contador_contenido }}">
+                        <!--Lenguaje {{ chapter.translatedLanguage }}-->
+                        <div class="ir-cap">
+                        {% if chapter.translatedLanguage %}
+                            {% set language_code = chapter.translatedLanguage.split('-')[0].upper() %}
+                            {% if language_code in custom_abbr_mapping %}
+                                <span>{{ get_flag_emoji(custom_abbr_mapping[language_code]) }}</span>
+                            {% else %}
+                                <span>{{ get_flag_emoji(language_code) }}</span>
+                            {% endif %}
                         {% endif %}
-                    {% endif %}
-                    
-                    <!--<p>ID del capítulo: {{ chapter.id }}</p>-->
-                    <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
-                    {% if chapter.title == "" %}
-                        Sin título
-                    {% else %}
-                        {{ chapter.title }}
-                    {% endif %}
-                    </a>
+                        
+                        <!--<p>ID del capítulo: {{ chapter.id }}</p>-->
+                        <a href="/manga/{{ manga_id }}/chapter/{{ chapter.id }}">
+                        {% if chapter.title == "" %}
+                            Sin título
+                        {% else %}
+                            {{ chapter.title }}
+                        {% endif %}
+                        </a>
+                        </div>
                     </div>
-                </div>
-                {% set contador_contenido = contador_contenido + 1 %}
-                
-            {% endfor %}
-        
-        {% endfor %}
+                    {% set contador_contenido = contador_contenido + 1 %}
+                    
+                {% endfor %}
+            
+                {% endfor %}
+            </div>
+        </div>
+
     </div>
     <script>
         const capitulos = document.querySelectorAll('.capitulo');
@@ -155,6 +164,24 @@
 
     </script>
     
+    <script>
+        function ajustarEstructura() {
+                const contenedor2 = document.querySelector('.contenedor2');
+                const contenedor3 = document.querySelector('.contenedor3');
+
+                if (window.innerWidth > 400) {
+                    contenedor2.appendChild(contenedor3);
+                } else {
+                    // Si la pantalla es menor a 400px, devuelve .contenedor3 a su posición original (opcional)
+                    const contenedorSup = document.querySelector('.container-sup');
+                    contenedorSup.appendChild(contenedor3);
+                }
+            }
+
+            // Llama a la función al cargar la página y al cambiar el tamaño de la ventana
+            window.addEventListener('load', ajustarEstructura);
+            window.addEventListener('resize', ajustarEstructura);
+    </script>
 
 </body>
 

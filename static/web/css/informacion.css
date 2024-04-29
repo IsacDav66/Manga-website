@@ -1,0 +1,41 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #02030A;
+}
+
+header, footer {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+    margin-bottom: 80px; /* Ajusta este valor según el tamaño de tu footer */
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+h1, h2 {
+    color: #8cb9a7;;
+    font-family: "Inconsolata";
+}
+
+p {
+    line-height: 1.5;
+    color: #859780;
+}
+a{
+    text-decoration: none;
+    color: #b6c4b2;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

@@ -20,7 +20,7 @@ def view_chapter_images(manga_id, chapter_id):
                     if attributes.get("externalUrl") is not None:
                         print("URL EXTERNA",attributes.get("externalUrl"))
                         external_url = attributes.get("externalUrl")
-                        return render_template("pruebaifra.html", external_url=external_url)
+                        return render_template("manga_url_chapters.html", external_url=external_url)
                     else:
                         return "Chapter images not found and no external URL available."
         return "Chapter information not available."
