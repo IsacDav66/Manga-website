@@ -10,6 +10,8 @@ header, footer {
     color: #fff;
     padding: 20px;
     text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 main {

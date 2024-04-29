@@ -169,10 +169,10 @@
                 const contenedor2 = document.querySelector('.contenedor2');
                 const contenedor3 = document.querySelector('.contenedor3');
 
-                if (window.innerWidth > 400) {
+                if (window.innerWidth > 480) {
                     contenedor2.appendChild(contenedor3);
                 } else {
-                    // Si la pantalla es menor a 400px, devuelve .contenedor3 a su posición original (opcional)
+                    // Si la pantalla es menor a 480px, devuelve .contenedor3 a su posición original (opcional)
                     const contenedorSup = document.querySelector('.container-sup');
                     contenedorSup.appendChild(contenedor3);
                 }
