@@ -48,6 +48,8 @@ La aplicación proporciona una manera fácil y agradable para que los usuarios d
 
 Este proyecto es un buen ejemplo de una aplicación web que interactúa con una API externa y presenta datos de forma organizada y fácil de usar. Muestra habilidades en el desarrollo web, manejo de APIs, diseño responsive, y la implementación de funcionalidades interactivas con JavaScript. Este trabajo se enfoca en la funcionalidad y en demostrar las habilidades en programación web.
 
+**Enlace del proyecto:**
+https://manga-website-1cah.onrender.com
 
 ![image](https://github.com/user-attachments/assets/86926fc3-7e7b-40b7-acff-a3f4e320e599)    ![image](https://github.com/user-attachments/assets/69590d6f-8afb-4e76-bc0f-16ae6265ae91)    ![image](https://github.com/user-attachments/assets/07fe3952-5095-46d5-8457-58dbfce83b9e)    ![image](https://github.com/user-attachments/assets/c11f2bf0-794e-4c5f-b34b-885172c7c0d4)
 
